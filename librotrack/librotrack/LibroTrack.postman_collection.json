@@ -1,0 +1,558 @@
+{
+  "info": {
+    "name": "LibroTrack",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Books",
+      "item": [
+        {
+          "name": "Add Book 1 (2 copies)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/books"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Head First Java\",\n  \"author\": \"Kathy Sierra\",\n  \"isbn\": \"978-0596009205\",\n  \"category\": \"Programming\",\n  \"totalCopies\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Add Book 2",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/books"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Database System Concepts\",\n  \"author\": \"Abraham Silberschatz\",\n  \"isbn\": \"978-0073523323\",\n  \"category\": \"Database\",\n  \"totalCopies\": 3\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Get All Books",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/books"
+            }
+          }
+        },
+        {
+          "name": "Get Book 1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/books/1"
+            }
+          }
+        },
+        {
+          "name": "Update Book 1",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/books/1"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Head First Java, 3rd Edition\",\n  \"author\": \"Kathy Sierra\",\n  \"isbn\": \"978-0596009205\",\n  \"category\": \"Programming\",\n  \"totalCopies\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Search by Title",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/books/search/title?title=java"
+            }
+          }
+        },
+        {
+          "name": "Search by Author",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/books/search/author?author=kathy"
+            }
+          }
+        },
+        {
+          "name": "Search by Category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/books/search/category?category=Database"
+            }
+          }
+        },
+        {
+          "name": "ERROR - Validation (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/books"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"\",\n  \"author\": \"\",\n  \"isbn\": \"\",\n  \"category\": \"\",\n  \"totalCopies\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "ERROR - Duplicate ISBN (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/books"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Copy\",\n  \"author\": \"X\",\n  \"isbn\": \"978-0596009205\",\n  \"category\": \"Programming\",\n  \"totalCopies\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "ERROR - Not Found (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/books/999"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Students",
+      "item": [
+        {
+          "name": "Add Student 1",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/students"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Anu Priya\",\n  \"rollNumber\": \"21CS001\",\n  \"department\": \"CSE\",\n  \"email\": \"anu@college.edu\",\n  \"phone\": \"9876543210\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Add Student 2",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/students"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Karthik R\",\n  \"rollNumber\": \"21CS002\",\n  \"department\": \"CSE\",\n  \"email\": \"karthik@college.edu\",\n  \"phone\": \"9876500001\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Add Student 3",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/students"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Meena S\",\n  \"rollNumber\": \"21IT003\",\n  \"department\": \"IT\",\n  \"email\": \"meena@college.edu\",\n  \"phone\": \"9876500002\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Get All Students",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/students"
+            }
+          }
+        },
+        {
+          "name": "Update Student 1",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/students/1"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Anu Priya K\",\n  \"rollNumber\": \"21CS001\",\n  \"department\": \"CSE\",\n  \"email\": \"anu.k@college.edu\",\n  \"phone\": \"9876543210\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "ERROR - Bad Email (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/students"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test\",\n  \"rollNumber\": \"21CS099\",\n  \"department\": \"CSE\",\n  \"email\": \"not-an-email\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Issue & Return",
+      "item": [
+        {
+          "name": "Issue Book 1 to Student 1",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/issues"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bookId\": 1,\n  \"studentId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Issue Book 1 to Student 2",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/issues"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bookId\": 1,\n  \"studentId\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "ERROR - No copies left (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/issues"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bookId\": 1,\n  \"studentId\": 3\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "ERROR - Same student same book (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/issues"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bookId\": 1,\n  \"studentId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "ERROR - Missing bookId (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/api/issues"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Books currently with Student 1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/issues/student/1/current"
+            }
+          }
+        },
+        {
+          "name": "Return on time (today)",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/issues/2/return"
+            }
+          }
+        },
+        {
+          "name": "Return LATE (fine demo)",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/issues/1/return?returnDate=2026-12-31"
+            }
+          }
+        },
+        {
+          "name": "ERROR - Already returned (409)",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/issues/1/return"
+            }
+          }
+        },
+        {
+          "name": "Student 1 history",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/issues/student/1/history"
+            }
+          }
+        },
+        {
+          "name": "All issue records",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/issues"
+            }
+          }
+        },
+        {
+          "name": "All books currently out",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/issues/current"
+            }
+          }
+        },
+        {
+          "name": "Overdue books",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/issues/overdue"
+            }
+          }
+        },
+        {
+          "name": "Filter by issue date",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/issues/filter?from=2026-01-01&to=2026-12-31"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Dashboard",
+      "item": [
+        {
+          "name": "Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/dashboard"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

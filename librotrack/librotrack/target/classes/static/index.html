@@ -1,0 +1,553 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LibroTrack - Library Book Issue and Return Manager</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eef2f3;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .container {
+            width: 90%;
+            margin: auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-top: 0;
+        }
+
+        .card {
+            background-color: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px #ccc;
+        }
+
+        h2 {
+            color: #333;
+            margin-top: 0;
+        }
+
+        h3 {
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        input,
+        select {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .create {
+            background-color: #4caf50;
+            color: white;
+        }
+        .update {
+            background-color: #2196f3;
+            color: white;
+        }
+        .get {
+            background-color: #555;
+            color: white;
+        }
+        .delete {
+            background-color: #f44336;
+            color: white;
+        }
+        .issue {
+            background-color: #9c27b0;
+            color: white;
+        }
+        .ret {
+            background-color: #ff9800;
+            color: white;
+        }
+
+        #message {
+            margin: 10px 0;
+            padding: 12px;
+            font-weight: bold;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .ok {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        .err {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .stat {
+            flex: 1 1 140px;
+            background-color: #f5f7fa;
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .stat .num {
+            font-size: 26px;
+            font-weight: bold;
+            color: #2196f3;
+        }
+
+        .stat .lbl {
+            font-size: 13px;
+            color: #666;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+
+        .late {
+            color: #c62828;
+            font-weight: bold;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <h1>LibroTrack</h1>
+    <p class="subtitle">Library Book Issue and Return Manager</p>
+
+    <div id="message"></div>
+
+    <!-- ================= DASHBOARD ================= -->
+    <div class="card">
+        <h2>Dashboard</h2>
+        <button class="get" onclick="loadDashboard()">Refresh Dashboard</button>
+        <div class="stats" id="stats"></div>
+    </div>
+
+    <!-- ================= BOOKS ================= -->
+    <div class="card">
+        <h2>Books</h2>
+
+        <input type="number" id="bookId" placeholder="Book ID (for update/get/delete)" />
+        <input type="text" id="bookTitle" placeholder="Title" />
+        <input type="text" id="bookAuthor" placeholder="Author" />
+        <input type="text" id="bookIsbn" placeholder="ISBN" />
+        <input type="text" id="bookCategory" placeholder="Category" />
+        <input type="number" id="bookCopies" placeholder="Total Copies" />
+        <br />
+        <button class="create" onclick="addBook()">Add Book</button>
+        <button class="update" onclick="updateBook()">Update Book</button>
+        <button class="get" onclick="getBook()">Get Book</button>
+        <button class="get" onclick="getAllBooks()">Get All Books</button>
+        <button class="delete" onclick="deleteBook()">Delete Book</button>
+
+        <h3>Search Books</h3>
+        <select id="searchType">
+            <option value="title">By Title</option>
+            <option value="author">By Author</option>
+            <option value="category">By Category</option>
+        </select>
+        <input type="text" id="searchText" placeholder="Search text" />
+        <button class="get" onclick="searchBooks()">Search</button>
+
+        <div class="table-wrap" id="bookTable"></div>
+    </div>
+
+    <!-- ================= STUDENTS ================= -->
+    <div class="card">
+        <h2>Students</h2>
+
+        <input type="number" id="studentId" placeholder="Student ID (for update/get/delete)" />
+        <input type="text" id="studentName" placeholder="Name" />
+        <input type="text" id="studentRoll" placeholder="Roll Number" />
+        <input type="text" id="studentDept" placeholder="Department" />
+        <input type="email" id="studentEmail" placeholder="Email" />
+        <input type="text" id="studentPhone" placeholder="Phone" />
+        <br />
+        <button class="create" onclick="addStudent()">Add Student</button>
+        <button class="update" onclick="updateStudent()">Update Student</button>
+        <button class="get" onclick="getStudent()">Get Student</button>
+        <button class="get" onclick="getAllStudents()">Get All Students</button>
+        <button class="delete" onclick="deleteStudent()">Delete Student</button>
+
+        <div class="table-wrap" id="studentTable"></div>
+    </div>
+
+    <!-- ================= ISSUE / RETURN ================= -->
+    <div class="card">
+        <h2>Issue &amp; Return</h2>
+
+        <h3>Issue a Book (due date = today + 14 days)</h3>
+        <input type="number" id="issueBookId" placeholder="Book ID" />
+        <input type="number" id="issueStudentId" placeholder="Student ID" />
+        <button class="issue" onclick="issueBook()">Issue Book</button>
+
+        <h3>Return a Book (fine Rs.2 per late day)</h3>
+        <input type="number" id="returnIssueId" placeholder="Issue Record ID" />
+        <input type="date" id="returnDate" title="Optional - leave empty for today" />
+        <button class="ret" onclick="returnBook()">Return Book</button>
+
+        <h3>Reports</h3>
+        <input type="number" id="reportStudentId" placeholder="Student ID" />
+        <button class="get" onclick="studentCurrent()">Currently Issued to Student</button>
+        <button class="get" onclick="studentHistory()">Student History</button>
+        <br />
+        <button class="get" onclick="allIssues()">All Issue Records</button>
+        <button class="get" onclick="currentIssues()">All Books Currently Out</button>
+        <button class="delete" onclick="overdueIssues()">Overdue Books</button>
+        <br />
+        From
+        <input type="date" id="fromDate" />
+        To
+        <input type="date" id="toDate" />
+        <button class="get" onclick="filterIssues()">Filter by Issue Date</button>
+
+        <div class="table-wrap" id="issueTable"></div>
+    </div>
+</div>
+
+<script>
+    // If this page is opened from IntelliJ's browser preview (port 63342) or as a file,
+    // send API calls to the Spring Boot server on port 8080.
+    const API_BASE = (location.port === "8080") ? "" : "http://localhost:8080";
+    const BOOK_API = API_BASE + "/api/books";
+    const STUDENT_API = API_BASE + "/api/students";
+    const ISSUE_API = API_BASE + "/api/issues";
+
+    // ---------- helpers ----------
+    function val(id) {
+        return document.getElementById(id).value.trim();
+    }
+
+    function showMessage(text, isError) {
+        const m = document.getElementById("message");
+        m.style.display = "block";
+        m.className = isError ? "err" : "ok";
+        m.innerText = text;
+    }
+
+    function esc(v) {
+        if (v === null || v === undefined) return "";
+        return String(v).replace(
+            /[&<>"]/g,
+            (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c],
+        );
+    }
+
+    // Calls the API; shows the server's error message if the call fails
+    async function callApi(url, method, body) {
+        const options = { method: method || "GET", headers: {} };
+        if (body !== undefined) {
+            options.headers["Content-Type"] = "application/json";
+            options.body = JSON.stringify(body);
+        }
+        let res;
+        try {
+            res = await fetch(url, options);
+        } catch (e) {
+            showMessage("Cannot reach the server at " + (API_BASE || location.origin)
+                + ". Start LibrotrackApplication in IntelliJ, then refresh this page.", true);
+            throw e;
+        }
+        const text = await res.text();
+        let data = text;
+        try {
+            data = JSON.parse(text);
+        } catch (e) {
+            /* plain text */
+        }
+
+        if (!res.ok) {
+            let msg = data && data.message ? data.message : "Error " + res.status;
+            if (data && data.fieldErrors) {
+                msg +=
+                    ": " +
+                    Object.entries(data.fieldErrors)
+                        .map(([f, e]) => f + " - " + e)
+                        .join(", ");
+            }
+            showMessage(msg, true);
+            throw new Error(msg);
+        }
+        return data;
+    }
+
+    // ---------- DASHBOARD ----------
+    async function loadDashboard() {
+        const d = await callApi(API_BASE + "/api/dashboard");
+        const items = [
+            ["Book Titles", d.totalBookTitles],
+            ["Total Copies", d.totalCopies],
+            ["Available Copies", d.availableCopies],
+            ["Students", d.totalStudents],
+            ["Books Issued Now", d.activeIssues],
+            ["Overdue", d.overdueIssues],
+            ["Fines Collected (Rs.)", d.totalFinesCollected],
+        ];
+        document.getElementById("stats").innerHTML = items
+            .map(
+                (i) =>
+                    `<div class="stat"><div class="num">${esc(i[1])}</div><div class="lbl">${i[0]}</div></div>`,
+            )
+            .join("");
+    }
+
+    // ---------- BOOKS ----------
+    function bookFromForm() {
+        return {
+            title: val("bookTitle"),
+            author: val("bookAuthor"),
+            isbn: val("bookIsbn"),
+            category: val("bookCategory"),
+            totalCopies: val("bookCopies") === "" ? null : Number(val("bookCopies")),
+        };
+    }
+
+    function renderBooks(list) {
+        if (!Array.isArray(list)) list = [list];
+        let html =
+            "<table><tr><th>ID</th><th>Title</th><th>Author</th><th>ISBN</th>" +
+            "<th>Category</th><th>Total</th><th>Available</th></tr>";
+        list.forEach((b) => {
+            html +=
+                `<tr><td>${b.id}</td><td>${esc(b.title)}</td><td>${esc(b.author)}</td>` +
+                `<td>${esc(b.isbn)}</td><td>${esc(b.category)}</td>` +
+                `<td>${b.totalCopies}</td><td>${b.availableCopies}</td></tr>`;
+        });
+        if (list.length === 0) html += "<tr><td colspan='7'>No books found</td></tr>";
+        document.getElementById("bookTable").innerHTML = html + "</table>";
+    }
+
+    async function addBook() {
+        const b = await callApi(BOOK_API, "POST", bookFromForm());
+        showMessage("Book added with ID " + b.id, false);
+        getAllBooks();
+        loadDashboard();
+    }
+
+    async function updateBook() {
+        const id = val("bookId");
+        if (!id) return showMessage("Enter Book ID to update", true);
+        await callApi(BOOK_API + "/" + id, "PUT", bookFromForm());
+        showMessage("Book " + id + " updated", false);
+        getAllBooks();
+        loadDashboard();
+    }
+
+    async function getBook() {
+        const id = val("bookId");
+        if (!id) return showMessage("Enter Book ID", true);
+        renderBooks(await callApi(BOOK_API + "/" + id));
+    }
+
+    async function getAllBooks() {
+        renderBooks(await callApi(BOOK_API));
+    }
+
+    async function deleteBook() {
+        const id = val("bookId");
+        if (!id) return showMessage("Enter Book ID to delete", true);
+        const msg = await callApi(BOOK_API + "/" + id, "DELETE");
+        showMessage(msg, false);
+        getAllBooks();
+        loadDashboard();
+    }
+
+    async function searchBooks() {
+        const type = val("searchType");
+        const text = val("searchText");
+        if (!text) return showMessage("Enter search text", true);
+        renderBooks(
+            await callApi(BOOK_API + "/search/" + type + "?" + type + "=" + encodeURIComponent(text)),
+        );
+    }
+
+    // ---------- STUDENTS ----------
+    function studentFromForm() {
+        return {
+            name: val("studentName"),
+            rollNumber: val("studentRoll"),
+            department: val("studentDept"),
+            email: val("studentEmail") || null,
+            phone: val("studentPhone"),
+        };
+    }
+
+    function renderStudents(list) {
+        if (!Array.isArray(list)) list = [list];
+        let html =
+            "<table><tr><th>ID</th><th>Name</th><th>Roll No</th><th>Department</th>" +
+            "<th>Email</th><th>Phone</th></tr>";
+        list.forEach((s) => {
+            html +=
+                `<tr><td>${s.id}</td><td>${esc(s.name)}</td><td>${esc(s.rollNumber)}</td>` +
+                `<td>${esc(s.department)}</td><td>${esc(s.email)}</td><td>${esc(s.phone)}</td></tr>`;
+        });
+        if (list.length === 0) html += "<tr><td colspan='6'>No students found</td></tr>";
+        document.getElementById("studentTable").innerHTML = html + "</table>";
+    }
+
+    async function addStudent() {
+        const s = await callApi(STUDENT_API, "POST", studentFromForm());
+        showMessage("Student added with ID " + s.id, false);
+        getAllStudents();
+        loadDashboard();
+    }
+
+    async function updateStudent() {
+        const id = val("studentId");
+        if (!id) return showMessage("Enter Student ID to update", true);
+        await callApi(STUDENT_API + "/" + id, "PUT", studentFromForm());
+        showMessage("Student " + id + " updated", false);
+        getAllStudents();
+    }
+
+    async function getStudent() {
+        const id = val("studentId");
+        if (!id) return showMessage("Enter Student ID", true);
+        renderStudents(await callApi(STUDENT_API + "/" + id));
+    }
+
+    async function getAllStudents() {
+        renderStudents(await callApi(STUDENT_API));
+    }
+
+    async function deleteStudent() {
+        const id = val("studentId");
+        if (!id) return showMessage("Enter Student ID to delete", true);
+        const msg = await callApi(STUDENT_API + "/" + id, "DELETE");
+        showMessage(msg, false);
+        getAllStudents();
+        loadDashboard();
+    }
+
+    // ---------- ISSUE / RETURN ----------
+    function renderIssues(list) {
+        if (!Array.isArray(list)) list = [list];
+        let html =
+            "<table><tr><th>Issue ID</th><th>Book</th><th>Student</th><th>Issue Date</th>" +
+            "<th>Due Date</th><th>Return Date</th><th>Status</th><th>Fine (Rs.)</th></tr>";
+        list.forEach((r) => {
+            const cls = r.overdue ? " class='late'" : "";
+            html +=
+                `<tr><td>${r.id}</td>` +
+                `<td>${esc(r.book.title)} (ID ${r.book.id})</td>` +
+                `<td>${esc(r.student.name)} (ID ${r.student.id})</td>` +
+                `<td>${esc(r.issueDate)}</td><td${cls}>${esc(r.dueDate)}</td>` +
+                `<td>${esc(r.returnDate) || "-"}</td>` +
+                `<td${cls}>${r.overdue ? "OVERDUE" : esc(r.status)}</td>` +
+                `<td>${r.currentFine}</td></tr>`;
+        });
+        if (list.length === 0) html += "<tr><td colspan='8'>No records found</td></tr>";
+        document.getElementById("issueTable").innerHTML = html + "</table>";
+    }
+
+    async function issueBook() {
+        const bookId = val("issueBookId");
+        const studentId = val("issueStudentId");
+        const r = await callApi(ISSUE_API, "POST", {
+            bookId: bookId === "" ? null : Number(bookId),
+            studentId: studentId === "" ? null : Number(studentId),
+        });
+        showMessage("Issued! Issue ID " + r.id + ", due on " + r.dueDate, false);
+        renderIssues(r);
+        loadDashboard();
+    }
+
+    async function returnBook() {
+        const id = val("returnIssueId");
+        if (!id) return showMessage("Enter Issue Record ID", true);
+        const date = val("returnDate");
+        const url = ISSUE_API + "/" + id + "/return" + (date ? "?returnDate=" + date : "");
+        const r = await callApi(url, "PUT");
+        showMessage("Returned on " + r.returnDate + ". Fine: Rs." + r.fineAmount, false);
+        renderIssues(r);
+        loadDashboard();
+    }
+
+    async function studentCurrent() {
+        const id = val("reportStudentId");
+        if (!id) return showMessage("Enter Student ID", true);
+        renderIssues(await callApi(ISSUE_API + "/student/" + id + "/current"));
+    }
+
+    async function studentHistory() {
+        const id = val("reportStudentId");
+        if (!id) return showMessage("Enter Student ID", true);
+        renderIssues(await callApi(ISSUE_API + "/student/" + id + "/history"));
+    }
+
+    async function allIssues() {
+        renderIssues(await callApi(ISSUE_API));
+    }
+
+    async function currentIssues() {
+        renderIssues(await callApi(ISSUE_API + "/current"));
+    }
+
+    async function overdueIssues() {
+        renderIssues(await callApi(ISSUE_API + "/overdue"));
+    }
+
+    async function filterIssues() {
+        const from = val("fromDate");
+        const to = val("toDate");
+        if (!from || !to) return showMessage("Select both From and To dates", true);
+        renderIssues(await callApi(ISSUE_API + "/filter?from=" + from + "&to=" + to));
+    }
+
+    // load dashboard when page opens
+    loadDashboard().catch(() => {});
+</script>
+</body>
+</html>
